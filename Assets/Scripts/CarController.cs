@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum RotationDirection
-{
-  Zero,ClockWise,AntiClockWise
-}
+
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class CarController : MonoBehaviour
@@ -17,18 +14,26 @@ public class CarController : MonoBehaviour
     private float _motorForce=0f;
     [SerializeField]
     private float _rotationForce = 0f;
+    [SerializeField]
+    private Booster _carBooster;
+    [SerializeField]
+    private Transform _boosterPosition;
 
     private float _horizontalMovement;
     private float _rotationMovement;
     private JointMotor2D _carMotor;
     private Rigidbody2D _carRigidBody;
-    private RotationDirection _rotationDirection;
     [Range(-1f, 1f)]
     private float _rotationRatio;
     [Range(-1f, 1f)]
     private float _movementRatio;
-
-
+    private bool _needToUseBooster = false;
+    private float _leftTimeToUseBooster = 10f;
+    private ParticleSystem _carBoosterParticals;
+    public void SetBoosterTrigger(bool needToUseBooster)
+    {
+        _needToUseBooster = needToUseBooster;
+    }
     public void AddRotationRatio(float rotationRatio)
     {
         _rotationRatio = rotationRatio;
@@ -47,6 +52,7 @@ public class CarController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _leftTimeToUseBooster = _carBooster.GetTimeToUse();
         _carMotor.maxMotorTorque = _wheel.motor.maxMotorTorque;
     }
     private void Update()
@@ -58,9 +64,20 @@ public class CarController : MonoBehaviour
     void FixedUpdate()
     {
         HorizontalMovement();
+        RotationMovement();
+        UsingBooster();
+    }
+    void UsingBooster()
+    {
+        if (!_needToUseBooster || _leftTimeToUseBooster <= 0) { return; }
+        _carBooster.UseBooster(_carRigidBody,_boosterPosition.position);
+        _leftTimeToUseBooster -= Time.deltaTime;
+      
+    }
+    void RotationMovement()
+    {
         _carRigidBody.AddTorque(_rotationForce * _rotationRatio);
     }
-
     void HorizontalMovement()
     {
         _horizontalMovement =  -_motorForce * _movementRatio;
