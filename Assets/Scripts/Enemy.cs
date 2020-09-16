@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour,IScoreObservable
 {
     [SerializeField]
     private Vector2 _speed;
@@ -23,14 +24,18 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if(collision.gameObject.tag!="Player") { return; }
+       // if(collision.gameObject.GetComponent<Bullet>() != null && collision.relativeVelocity.magnitude<20) { return; }
+        if (collision.gameObject.GetComponent<Bullet>()!=null) { collision.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0); } 
         _capsuleEnemyCollider.isTrigger = true;
         StartCoroutine(Collision());
+        
     }
     private IEnumerator Collision()
     {
-        yield return new WaitForSeconds(0.2f);
-        GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(0.2f,0.5f),Random.Range(20f,50f)),ForceMode2D.Impulse);
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(20f,50f), UnityEngine.Random.Range(0.2f, 0.5f)),ForceMode2D.Impulse);
         //Play particles
         yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
@@ -39,6 +44,10 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         _enemyRigidBody.AddForce(_speed,ForceMode2D.Force);
-        
+    }
+
+    public Action<int> ScoreEvent()
+    {
+       
     }
 }

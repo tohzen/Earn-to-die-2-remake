@@ -9,8 +9,6 @@ public class Gun : MonoBehaviour
     [Range(0, 30)]
     private int _numOfBullets =  5;
     [SerializeField]
-    private Bullet _bullet;
-    [SerializeField]
     private Transform _bulletStartPosition;
     [SerializeField]
     private float _attackDistance = 10f;
@@ -29,9 +27,12 @@ public class Gun : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(_bulletStartPosition.position, Vector2.right, _attackDistance);
         if (hit.collider != null && hit.collider.tag == "Enemy")
         {
-            //use object pool
-            Bullet bulletInstance = Instantiate(_bullet, _bulletStartPosition.position, Quaternion.identity);
-            bulletInstance.AddBulletForce();
+            
+            GameObject bulletInstance = ObjectPooler.Instance.GetObject();
+            bulletInstance.transform.position = _bulletStartPosition.position;
+            bulletInstance.SetActive(true);
+            bulletInstance.GetComponent<Bullet>()?.AddBulletForce();
+            
             Debug.Log("WTF");
             _timeToNextShoot = 0.5f;
         }
