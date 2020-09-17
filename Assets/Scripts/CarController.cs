@@ -36,6 +36,7 @@ public class CarController : MonoBehaviour
     }
     public void AddRotationRatio(float rotationRatio)
     {
+        Debug.Log("work");
         _rotationRatio = rotationRatio;
     }
     public void AddMovementRatio(float movementRatio)
