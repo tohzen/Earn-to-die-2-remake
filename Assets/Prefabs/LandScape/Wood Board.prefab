@@ -93,7 +93,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4885414113084822772}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -118,7 +118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c85fcb2c9ccb0941ba860b263b88ba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToDestroy: 0.5
+  _timeToDestroy: 1
+  _obstacleHardness: 10
+  _anim: {fileID: 0}
 --- !u!61 &4885414113084822775
 BoxCollider2D:
   m_ObjectHideFlags: 0

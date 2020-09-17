@@ -12,6 +12,8 @@ public class Obstacle : MonoBehaviour
     private float _obstacleHardness = 10f;
     [SerializeField]
     private Animation _anim;
+    [SerializeField]
+    private bool _isDestroyble = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,7 @@ public class Obstacle : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag != "Player") { return; }
+        if (collision.gameObject.tag != "Player" || !_isDestroyble) { return; }
         if (collision.relativeVelocity.magnitude > 10)
         {
             //Play anim

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 
 
@@ -9,9 +9,10 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     [SerializeField]
-    private WheelJoint2D _wheel;
+    private Text _carSpeedText;
     [SerializeField]
-    private float _motorForce=0f;
+    private WheelJoint2D _wheel;
+    public  float MotorForce=0f;
     [SerializeField]
     private float _rotationForce = 0f;
     [SerializeField]
@@ -20,7 +21,6 @@ public class CarController : MonoBehaviour
     private Transform _boosterPosition;
 
     private float _horizontalMovement;
-    private float _rotationMovement;
     private JointMotor2D _carMotor;
     private Rigidbody2D _carRigidBody;
     [Range(-1f, 1f)]
@@ -29,14 +29,13 @@ public class CarController : MonoBehaviour
     private float _movementRatio;
     private bool _needToUseBooster = false;
     private float _leftTimeToUseBooster = 10f;
-    private ParticleSystem _carBoosterParticals;
     public void SetBoosterTrigger(bool needToUseBooster)
     {
         _needToUseBooster = needToUseBooster;
     }
     public void AddRotationRatio(float rotationRatio)
     {
-        Debug.Log("work");
+        
         _rotationRatio = rotationRatio;
     }
     public void AddMovementRatio(float movementRatio)
@@ -58,8 +57,7 @@ public class CarController : MonoBehaviour
     }
     private void Update()
     {
-        _horizontalMovement = - Input.GetAxis("Horizontal") * _motorForce;
-        _rotationMovement = Input.GetAxis("Vertical") * _rotationForce;
+        _carSpeedText.text = $"Speed {(int)(_carRigidBody.velocity.magnitude * 3.6f)} Km/H";
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -81,7 +79,7 @@ public class CarController : MonoBehaviour
     }
     void HorizontalMovement()
     {
-        _horizontalMovement =  -_motorForce * _movementRatio;
+        _horizontalMovement =  -MotorForce * _movementRatio;
         if (_horizontalMovement == 0f)
         {
             _wheel.useMotor = false;
