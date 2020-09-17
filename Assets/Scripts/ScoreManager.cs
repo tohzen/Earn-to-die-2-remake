@@ -1,11 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using System;
+using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
-    
+    [SerializeField]
+    private Text  _scoreText;
+    public static Action<int> OnAddingScore;
+    private int _numOfScore;
+    private void ScoreAdd(int score)
+    {
+        _numOfScore += score;
+        _scoreText.text = $"Score: {_numOfScore}";
+    }
+    private void Awake()
+    {
+        _scoreText = GetComponent<Text>();
+        OnAddingScore += ScoreAdd;
+    }
     // Start is called before the first frame update
     void Start()
     {
